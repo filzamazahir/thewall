@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>User Profile and Wall</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Wall App</a></li>
+                    <li class="active"><a href="/">Dashboard</a></li>
+                    <li><a href="#">Profile</a></li>
+                </ul>
+            <!-- <a class="navbar-brand" href="/">Wall App</a> -->
+            </div>
+
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/users/logoff">Logoff</a></li>
+                </ul>
+
+            </div>
+        </div>
+        </nav>
+
+        <div class="container" id="topmargin">
+            <div class="row">
+            <div class="col-md-12">
+                <h4>{{userprofile['first_name']}} {{userprofile['last_name']}}</h4>
+            </div>
+            <div class="col-md-2">
+                <p>Email Address: </p>
+                <p>Description: </p>
+                <p>Registered At: </p>
+            </div>
+
+            <div class="col-md-4">
+                <p>{{userprofile['email']}}</p>
+                {%if not userprofile['description'] %}
+                    <p>Oops! {{userprofile['first_name']}} hasn't added a description yet!</p>
+                {%else %}
+                    <p>{{userprofile['description']}}</p>
+                {%endif %}
+                <p>{{userprofile['created_at']}}</p>
+            </div>
+
+
+            <form action = "/message/{{current_user['id']}}", method = 'POST'>
+                <div class="form-group">
+                    <label for="message">Leave a message:</label>
+                    <textarea name="message" id="message" class="form-control" rows ="4"></textarea>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-10">
+                        <button type="submit" class="btn btn-primary">Post a message</button>
+                    </div>
+                </div>
+            </form>
+
+            
+            <div class="row" id="post">
+                
+                {%for msg_user in messages_users %}
+
+                <div class="col-md-12">
+                    <h4>{{msg_user['first_name']}} {{msg_user['last_name']}} - {{msg_user['created_at'].strftime("%B %d %Y, %I:%M %p")}}</h4>
+                </div>
+                <div class="col-md-1 col-md-offset-6">
+                    
+                </div>
+
+                <div class="col-md-11 col-md-offset-1">
+                    <p>{{msg_user['message']}}</p>
+
+                    {%if msg_user['userid'] == current_user[0]['id'] %}
+                        <a href="/delete_message/{{msg_user['msgid']}}">Delete</a>
+                    {%endif%}
+                    <br>
+                </div>
+                
+           
+                {%for comment_msg_usr in comments_messages_users %}
+                {%if comment_msg_usr['comment_msgid'] == msg_user['msgid']%}
+
+                <div class="col-md-10 col-md-offset-2">
+                    <h5>{{comment_msg_usr['first_name']}} {{comment_msg_usr['last_name']}} - {{comment_msg_usr['created_at'].strftime("%B %d %Y, %I:%M %p")}}</h5>
+                    <p>{{comment_msg_usr['comment']}}</p>
+
+                </div>
+                {%endif%}
+                {%endfor%}
+
+
+
+                <form action = "/comment/{{msg_user['msgid']}}/{{current_user[0]['id']}}", method = 'POST'>
+                    <div class="col-md-10 col-md-offset-2">
+                        <div class="form-group">
+                            <label for="comment">Post a comment:</label>
+                            <textarea name="comment" id="comment" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-md-offset-10">
+                        <button type="submit" class="btn btn-success">Post a comment</button>
+                    </div>
+                </form>
+
+
+                {%endfor %}
+            
+
+            </div>
+
+            
+        </div>
+
+    </body>
+</html>

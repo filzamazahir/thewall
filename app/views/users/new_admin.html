@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add New User</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    </head>
+
+
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Wall App</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="/users/show">Profile/Wall</a></li>
+                </ul>
+                <span class="pull-right" id="paddingtop15"><a href="/signout">Sign Out</a></span>
+            </div>
+        </nav>
+
+        <div class="container" id="topmargin">
+        
+            <span class="h2">Add a new user</span> 
+            <span class="pull-right" id="paddingtop15"><a class="btn btn-primary" href="/dashboard" role="button">Sign in</a></span>
+        
+
+            <div class="row">
+               
+
+                <div class="col-md-5">
+                    <form action="/register" method='POST'>
+
+                        <div class="form-group">
+                            <label for="firstname">First Name:</label>
+                            <input type="text" name="fname" id="firstname" class="form-control">
+                        </div>
+                        {%with errors = get_flashed_messages(category_filter=["firstname"]) %}
+                        {% if errors %}
+                            {% for error in errors %}
+                                <p class="error">{{error}}</p>
+                            {%endfor%}
+                        {%endif%}
+                        {%endwith%}
+
+                        <div class="form-group">
+                            <label for="lastname">Last Name:</label>
+                            <input type="text" name="lname" id="lastname" class="form-control">
+                        </div>
+                        {%with errors = get_flashed_messages(category_filter=["lastname"]) %}
+                        {% if errors %}
+                            {% for error in errors %}
+                                <p class="error">{{error}}</p>
+                            {%endfor%}
+                        {%endif%}
+                        {%endwith%}
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="text" name="email" id="email" class="form-control">
+                        </div>
+                        {%with errors = get_flashed_messages(category_filter=["email_register"]) %}
+                        {% if errors %}
+                            {% for error in errors %}
+                                <p class="error">{{error}}</p>
+                            {%endfor%}
+                        {%endif%}
+                        {%endwith%}
+
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" name="password" id="password" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password:</label>
+                            <input type="password" name="conf_password" id="confirm_password" class="form-control">
+                        </div>
+                        {%with errors = get_flashed_messages(category_filter=["password_register"]) %}
+                        {% if errors %}
+                            {% for error in errors %}
+                                <p class="error">{{error}}</p>
+                            {%endfor%}
+                        {%endif%}
+                        {%endwith%}
+
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+
+                    {%with errors = get_flashed_messages(category_filter=["register"]) %}
+                    {% if errors %}
+                        {% for error in errors %}
+                            <p class="error bottomerror">{{error}}</p>
+                        {%endfor%}
+                    {%endif%}
+                    {%endwith%}
+
+                    
+
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
