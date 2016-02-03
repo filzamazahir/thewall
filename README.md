@@ -1,31 +1,30 @@
-# Pylot MVC (beta)
+# The Wall
+The Wall is a Facebook mockup webapp built in Python using Pylot MVC. 
+
 Pylot MVC is a lightweight MVC framework built in Python leveraging flask.
+Source of Pylot MVC: https://github.com/Ketul-Patel/Pylot.git
 
-This framework is currently still in development. If you want to play around with it read on or clone the stable version!
+# To Run
 
-# Installation
-
-First make sure you have pip installed. If you don't have it installed there are great instructions here: https://pip.pypa.io/en/latest/installing.html
-
-Next install virtualenv
+1) Clone the project
 ```
-sudo pip install virtualenv
+git clone https://github.com/filzamazahir/thewall.git
 ```
 
-Clone the project
-```
-git clone -b stable https://github.com/Ketul-Patel/Pylot.git
-```
+2) Make sure to have pip installed. If you don't have it installed there are great instructions here: https://pip.pypa.io/en/latest/installing.html
 
+3) Import the sql files from the folder sqlfiles, and start the MAMP server
+
+4) 
 cd into the project and source the setup file
 ```
-cd Pylot
+cd thewall
 . setup
 ```
 
-Now you can start your development server like so:
+Start the development server::
 ```
 python manage.py runserver
 ```
 
-Enjoy! More details/features coming soon!
+
