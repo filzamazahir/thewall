@@ -6,10 +6,19 @@
         <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.0/jquery.timeago.js"></script>
+
+        <script type="text/javasctipt">
+            $(document).ready(function () {
+                var formattedstring = $('.timeformatted').timeago();
+                console.log(formattedstring);
+                $('.timeformatted').html(formattedstring);
+            });
+        </script>
     </head>
     <body>
 
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top" id="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -21,7 +30,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="#">Wall App</a></li>
                     <li class="active"><a href="/">Dashboard</a></li>
-                    <li><a href="#">Profile</a></li>
+                    <li><a href="/users/{{current_user['id']}}">My Profile</a></li>
                 </ul>
             <!-- <a class="navbar-brand" href="/">Wall App</a> -->
             </div>
@@ -38,28 +47,27 @@
         <div class="container" id="topmargin">
             <div class="row">
             <div class="col-md-12">
-                <h4>{{userprofile['first_name']}} {{userprofile['last_name']}}</h4>
+                <h4 class="text-center">{{userprofile['first_name']}} {{userprofile['last_name']}}</h4>
             </div>
-            <div class="col-md-2">
-                <p>Email Address: </p>
-                <p>Description: </p>
-                <p>Registered At: </p>
-            </div>
-
-            <div class="col-md-4">
-                <p>{{userprofile['email']}}</p>
+            <div class="col-md-12">
+                <p><strong>Email Address: </strong>{{userprofile['email']}}</p>
                 {%if not userprofile['description'] %}
-                    <p>Oops! {{userprofile['first_name']}} hasn't added a description yet!</p>
+                    <p><strong>Description: </strong>Oops! {{userprofile['first_name']}} hasn't added a description yet!</p>
                 {%else %}
-                    <p>{{userprofile['description']}}</p>
+                    <p><strong>Description: {{userprofile['description']}}</strong></p>
                 {%endif %}
-                <p>{{userprofile['created_at']}}</p>
+                <p><strong>Registered At: </strong>{{userprofile['created_at'].strftime("%B %d %Y, %I:%M %p")}}</p>
+
             </div>
 
+            <!-- .strftime("%B %d %Y, %I:%M %p") -->
 
-            <form action = "/message/{{current_user['id']}}", method = 'POST'>
+            
+
+
+            <form action = "/message/{{userprofile['id']}}", method = 'POST'>
                 <div class="form-group">
-                    <label for="message">Leave a message:</label>
+                    <label for="message">Leave a message for {{userprofile['first_name']}} {{userprofile['last_name']}}:</label>
                     <textarea name="message" id="message" class="form-control" rows ="4"></textarea>
                 </div>
 
@@ -74,44 +82,56 @@
             
             <div class="row" id="post">
                 
-                {%for msg_user in messages_users %}
+                {%for msg in messages %}
 
                 <div class="col-md-12">
-                    <h4>{{msg_user['first_name']}} {{msg_user['last_name']}} - {{msg_user['created_at'].strftime("%B %d %Y, %I:%M %p")}}</h4>
+                    <h4><a href="/users/{{msg['userid']}}">{{msg['first_name']}} {{msg['last_name']}}</a> wrote:
+                    <span class="pull-right"> {{msg['created_at'].strftime("%B %d %Y, %I:%M %p")}}</span></h4>
                 </div>
-                <div class="col-md-1 col-md-offset-6">
+
+                <!-- .strftime("%B %d %Y, %I:%M %p") -->
+
+                <div class="col-md-12">
                     
-                </div>
 
-                <div class="col-md-11 col-md-offset-1">
-                    <p>{{msg_user['message']}}</p>
-
-                    {%if msg_user['userid'] == current_user[0]['id'] %}
-                        <a href="/delete_message/{{msg_user['msgid']}}">Delete</a>
+                    {%if msg['msgbyuser'] == current_user['id'] %}
+                        <p class="text-justify" id="commentbox">{{msg['message']}}<span class="pull-right"><a href="/delete_message/{{userprofile['id']}}/{{msg['msgid']}}">Delete</a></span></p>
+                    {%else%}
+                    <p class="text-justify" id="commentbox">{{msg['message']}}</p>
                     {%endif%}
                     <br>
                 </div>
                 
            
                 {%for comment_msg_usr in comments_messages_users %}
-                {%if comment_msg_usr['comment_msgid'] == msg_user['msgid']%}
+                {%if comment_msg_usr['comment_msgid'] == msg['msgid']%}
 
-                <div class="col-md-10 col-md-offset-2">
-                    <h5>{{comment_msg_usr['first_name']}} {{comment_msg_usr['last_name']}} - {{comment_msg_usr['created_at'].strftime("%B %d %Y, %I:%M %p")}}</h5>
-                    <p>{{comment_msg_usr['comment']}}</p>
-
+                <div class="col-md-12">
+                <div id="commentsidemargin">
+                    <h5><a href="/users/{{comment_msg_usr['comment_userid']}}">{{comment_msg_usr['first_name']}} {{comment_msg_usr['last_name']}}</a> wrote: <span class="pull-right">{{comment_msg_usr['created_at'].strftime("%B %d %Y, %I:%M %p")}}</span></h5>
+                    
+                    {%if comment_msg_usr['commentbyuserid'] == current_user['id'] %}
+                        <p class="text-justify" id="commentbox">{{comment_msg_usr['comment']}}<span class="pull-right"><a href="/delete_comment/{{userprofile['id']}}/{{comment_msg_usr['commentid']}}">Delete</a></span></p>
+                    {%else%}
+                    <p class="text-justify" id="commentbox">{{comment_msg_usr['comment']}}</p>
+                    {%endif%}
+                </div>
                 </div>
                 {%endif%}
                 {%endfor%}
 
+                <!-- .strftime("%B %d %Y, %I:%M %p") -->
 
 
-                <form action = "/comment/{{msg_user['msgid']}}/{{current_user[0]['id']}}", method = 'POST'>
-                    <div class="col-md-10 col-md-offset-2">
+
+                <form action = "/comment/{{msg['msgid']}}/{{userprofile['id']}}", method = 'POST'>
+                    <div class="col-md-12">
+                    <div id="commentsidemargin">
                         <div class="form-group">
                             <label for="comment">Post a comment:</label>
                             <textarea name="comment" id="comment" class="form-control"></textarea>
                         </div>
+                    </div>
                     </div>
                     <div class="col-md-2 col-md-offset-10">
                         <button type="submit" class="btn btn-success">Post a comment</button>

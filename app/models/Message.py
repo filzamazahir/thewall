@@ -9,7 +9,7 @@ class Message(Model):
 
     # Get all messages for a user
     def get_all_messages_for_user(self, user_id):
-        query = "SELECT users.id AS userid, users.first_name, users.last_name, messages.id AS msgid, messages.message, messages.created_at, messages.updated_at FROM users JOIN messages ON users.id = messages.user_id_to WHERE users.id = %s ORDER BY messages.id DESC"
+        query = "SELECT users.id AS userid, users.first_name, users.last_name, messages.id AS msgid, messages.user_id_by AS msgbyuser, messages.message, messages.created_at, messages.updated_at FROM users JOIN messages ON users.id = messages.user_id_by WHERE messages.user_id_to = %s ORDER BY messages.id DESC"
         messages = self.db.query_db(query, [user_id])
         return messages
 
@@ -19,7 +19,7 @@ class Message(Model):
         user_id_to = message_info['user_id_to']
         message = message_info['message']
 
-        if len(request.form['message']) == 0:
+        if len(message) == 0:
             return {"status" : False, "error": "Comment cannot be empty."}
 
         insert_message_query = "INSERT INTO messages (user_id_by, user_id_to, message, created_at, updated_at) VALUES (%s, %s, %s, NOW(),NOW())"

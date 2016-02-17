@@ -10,18 +10,17 @@ routes['POST']['/users/login'] = 'Users#login'
 routes['POST']['/users/register'] = 'Users#register'
 routes ['/users/<int:id>'] = 'Users#show'
 routes['/users/logoff'] = 'Users#logoff'
+routes['/users/edit/<int:user_id>'] = 'Users#show_edit'
+routes['POST']['/users/update_description/<int:user_id>'] = 'Users#update_description'
+routes['POST']['/users/update_info/<int:user_id>'] = 'Users#update_info'
+routes['POST']['/users/update_password/<int:user_id>'] = 'Users#update_password'
+routes['/users/delete/<int:user_id>'] = 'Users#delete_user'
+
+
 
 routes['POST']['/message/<int:user_id>'] = 'Messages#create_message'
 routes['/delete_message/<int:user_id>/<int:message_id>'] = 'Messages#destroy_message'
 
 routes['POST']['/comment/<int:messageid>/<int:userid>'] = 'Comments#create_comment'
 routes['/delete_comment/<int:user_id>/<int:comment_id>'] = 'Comments#destroy_comment'
-
-
-# routes['/books'] = 'Books#index'
-# routes['/books/new'] = 'Books#new'
-# routes['/books/<int:bookid>'] = 'Books#show'
-# routes['POST']['/books/create'] = 'Books#create_book_review'
-# routes['POST']['/books/create_review/<int:bookid>'] = 'Books#create_review'
-# routes['/books/delete/<int:bookid>/<int:reviewid>'] = 'Books#destroy_review'
 

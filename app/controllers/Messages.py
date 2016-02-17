@@ -11,9 +11,9 @@ class Messages(Controller):
 
     def create_message(self, user_id):
         message_info = {
-            user_id_by: session['userid'],
-            user_id_to: user_id,
-            message: request.form['message']
+            "user_id_by": session['userid'],
+            "user_id_to": user_id,
+            "message": request.form['message']
         }
         
         message_posted_status = self.models['Message'].post_message(message_info)
