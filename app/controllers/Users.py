@@ -108,7 +108,7 @@ class Users(Controller):
             error_dict = update_status['error_dict']
             for key,val in error_dict.items():
                 flash(val, key)
-            return redirect ('/users/edit/'+str(user_id>))
+            return redirect ('/users/edit/'+str(user_id))
 
         return redirect ('/')
 
